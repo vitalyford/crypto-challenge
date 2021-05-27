@@ -1,6 +1,9 @@
 import random
 
 from flask import Flask
+from flask import render_template
+
+
 app = Flask(__name__)
 
 
@@ -42,12 +45,12 @@ def encrypt(plaintext: str) -> str:
         message += chr(random.randint(32, 128))
 
     encrypted = ''
-    for i in range(0, len(message), 16):
-        encrypted += xor_strings_and_return_hex(message[i:i+16], KEY)
+    for i in range(0, len(message), len(KEY)):
+        encrypted += xor_strings_and_return_hex(message[i:i+len(KEY)], KEY)
 
     return encrypted
 
 
 @app.route('/')
 def home():
-    return 'Please send your plaintext in the URL path. For example, <b>http://xorro.vford.com/this is a plaintext I want to encrypt</b>. In return, you will receive an encrypted message in <b>hex</b>. Your goal is to obtain the flag, given that the code that runs this whole server is the following:'
+    return render_template('index.html')

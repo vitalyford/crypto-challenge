@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>XORRO app</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8 col-sm-12 m-auto mt-5">
+            <p class="lead">Please send your plaintext in the URL path. For example, <b>http://xorro.vford.com/this is a plaintext I want to encrypt</b>. In return, you will receive an encrypted message in <b>hex</b>. Your goal is to obtain the flag, given that the code that runs this whole server is the following (the <code>KEY</code> and <code>FLAG</code> are intentionally omited from viewing):</p>
+            <div class="bg-dark"><code class="pl-5"><pre class="mx-4 pt-3">
+import random
+
+from flask import Flask
+app = Flask(__name__)
+
+
+FLAG = ...
+KEY  = ...  # 16-ASCII-character key
+
+
+'''
+XOR two strings character by character and return the result in hex
+'''
+def xor_strings_and_return_hex(s1: str, s2: str) -> str:
+    result = ''.join([chr(ord(a) ^ ord(b)) for a,b in zip(s1, s2)])
+    return result.encode('utf-8').hex()
+
+
+@app.route('/&lt;plaintext&gt;')
+def encrypt(plaintext: str) -> str:
+    message = plaintext + FLAG
+    
+    while len(message) % len(KEY) != 0:
+        # add random padding
+        message += chr(random.randint(32, 128))
+
+    encrypted = ''
+    for i in range(0, len(message), len(KEY)):
+        encrypted += xor_strings_and_return_hex(message[i:i+len(KEY)], KEY)
+
+    return encrypted
+            </pre></code></div>
+          </div>
+        </div>
+      </div>
+</body>
+
+</html>
