@@ -16,16 +16,19 @@ def xor_strings_and_return_text(s1: str, s2: str) -> str:
     return result
 
 
-@app.route('/d/<ciphertext>')
+@app.route('/dr-soviet-can-decrypt/<ciphertext>')
 def decrypt(ciphertext: str) -> str:
-    bytes_object = bytes.fromhex(ciphertext)
-    utf_8_string = bytes_object.decode('utf-8')
+    try:
+        bytes_object = bytes.fromhex(ciphertext)
+        utf_8_string = bytes_object.decode('utf-8')
 
-    message = ''
-    for i in range(0, len(utf_8_string), 16):
-        message += xor_strings_and_return_text(utf_8_string[i:i+16], KEY)
+        message = ''
+        for i in range(0, len(utf_8_string), 16):
+            message += xor_strings_and_return_text(utf_8_string[i:i+16], KEY)
 
-    return message
+        return message
+    except:
+        return 'The input was not really what it should be (you should give me pure hex without any junk in it)'
 
 
 '''
