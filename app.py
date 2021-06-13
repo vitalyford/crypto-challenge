@@ -9,6 +9,7 @@ app = Flask(__name__)
 
 FLAG = 'https://vford.me/final-answers'
 KEY  = 'It has been real'  # 16-ASCII-character key
+                           # lower/upper case and a space
 
 
 def xor_strings_and_return_text(s1: str, s2: str) -> str:
@@ -42,7 +43,7 @@ def xor_strings_and_return_hex(s1: str, s2: str) -> str:
 @app.route('/<plaintext>')
 def encrypt(plaintext: str) -> str:
     message = plaintext + FLAG
-    
+
     while len(message) % len(KEY) != 0:
         # add random padding
         message += chr(random.randint(32, 128))
